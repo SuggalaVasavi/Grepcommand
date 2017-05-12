@@ -5,7 +5,7 @@ import java.io.*;
 /** A command-line grep-like program. No options, but takes a pattern
  * and an arbitrary list of text files.
  */
-public class Grep1 {
+public class Grep {
   /** The pattern we're looking for */
   protected Pattern pattern;
   /** The matcher for this pattern */
@@ -17,25 +17,25 @@ public class Grep1 {
   public static void main(String[] argv) throws Exception {
 
     if (argv.length < 1) {
-        System.err.println("Usage: Grep1 pattern [filename]");
+        System.err.println("Usage: Grep pattern [filename]");
         System.exit(1);
     }
 
-    Grep1 pg = new Grep1(argv[0]);
+    Grep grep = new Grep(argv[0]);
 
     if (argv.length == 1)
-      pg.process(new BufferedReader(new InputStreamReader(System.in)),
+      grep.process(new BufferedReader(new InputStreamReader(System.in)),
         "(standard input)", false);
     else
       for (int i=1; i<argv.length; i++) {
-        pg.process(new BufferedReader(new FileReader(argv[i])),
+        grep.process(new BufferedReader(new FileReader(argv[i])),
           argv[i], true);
       }
   }
 
   /** Construct a Grep1 program */
-  public Grep1(String patt) {
-    pattern = Pattern.compile(patt);
+  public Grep(String patterns) {
+    pattern = Pattern.compile(patterns);
     matcher = pattern.matcher("");
   }
 
