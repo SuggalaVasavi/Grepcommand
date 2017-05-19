@@ -1,66 +1,62 @@
 
-import java.util.regex.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-/** A command-line grep-like program. No options, but takes a pattern
- * and an arbitrary list of text files.
- */
+
 public class Grep {
-  /** The pattern we're looking for */
-  protected Pattern pattern;
-  /** The matcher for this pattern */
-  protected Matcher matcher;
 
-  /** Main will make a Grep object for the pattern, and run it
-   * on all input files listed in argv.
-   */
+  private static Pattern pattern;
+
+  private static Matcher matcher;
+
+
   public static void main(String[] argv) throws Exception {
 
     if (argv.length < 1) {
-        System.err.println("Usage: Grep pattern [filename]");
+        System.err.println("Usage: Grep1 pattern [filename]");
         System.exit(1);
     }
 
-    Grep grep = new Grep(argv[0]);
+
 
     if (argv.length == 1)
-      grep.process(new BufferedReader(new InputStreamReader(System.in)),
-        "(standard input)", false);
-    else
+    {
+    System.out.println("error");
+    }
+    if(argv.length == 2)
+    {
       for (int i=1; i<argv.length; i++) {
-        grep.process(new BufferedReader(new FileReader(argv[i])),
-          argv[i], true);
+    	  Grep.grep(argv[0],argv[1]);
+
       }
+    }
   }
 
-  /** Construct a Grep1 program */
-  public Grep(String patterns) {
-    pattern = Pattern.compile(patterns);
-    matcher = pattern.matcher("");
-  }
 
-  /** Do the work of scanning one file
-   * @param ifile BufferedReader object already open
-   * @param fileName String Name of the input file
-   * @param printFileName Boolean - true to print filename
-   * before lines that match.
-   */
-  public void process(
-    BufferedReader inputFile, String fileName, boolean printFileName) {
+  public static String grep(String patterns,String fileName) {
+   pattern = Pattern.compile(patterns);
+  matcher = pattern.matcher("");
 
-    String inputLine;
+    String inputLine = null;
+
 
     try {
-      while ((inputLine = inputFile.readLine()) != null) {
+    	FileReader filereader = new FileReader( fileName );
+        BufferedReader br = new BufferedReader( filereader );
+        while( ( inputLine = br.readLine() ) != null ) {
         matcher.reset(inputLine);
         if (matcher.lookingAt()) {
-          if (printFileName) {
+          if (fileName != null) {
             System.out.print(fileName + ": ");
           }
           System.out.println(inputLine);
         }
       }
-      inputFile.close();
+      br.close();
     } catch (IOException e) { System.err.println(e); }
+	return inputLine;
   }
 }
